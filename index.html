@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Запрет — скачать</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono&display=swap">
+<style>
+  /* layout: one centered card — QR on the left, details on the right; stacks on phones */
+  :root {
+    --bg: #eef1f4; --card: #ffffff; --fg: #18202a; --muted: #5b6673;
+    --accent: #1f6feb; --line: #d5dbe2;
+    --display: "Unbounded", system-ui, sans-serif;
+    --body: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f141a; --card: #171e26; --fg: #e6ebf0; --muted: #94a0ad; --accent: #58a6ff; --line: #2a3440; color-scheme: dark; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--fg); font: 16px/1.5 var(--body); padding: 24px 16px; }
+  main { width: 100%; max-width: 720px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 28px; display: flex; flex-wrap: wrap; gap: 28px; align-items: center; }
+  .qr { background: #fff; padding: 14px; border-radius: 10px; border: 1px solid var(--line); line-height: 0; }
+  .qr img, .qr canvas { width: 220px; height: 220px; }
+  .info { flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+  h1 { margin: 0; font: 600 28px/1.15 var(--display); text-wrap: balance; }
+  p { margin: 0; color: var(--muted); }
+  .file { font: 14px var(--mono); color: var(--muted); }
+  a.btn { display: inline-block; align-self: flex-start; background: var(--accent); color: #fff; text-decoration: none; font-weight: 500; padding: 12px 22px; border-radius: 8px; }
+  a.btn:hover { filter: brightness(1.1); }
+  a.btn:focus-visible, button:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
+  .link { display: flex; gap: 8px; align-items: center; }
+  .link code { flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; font: 13px var(--mono); padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; }
+  button { font: 500 14px var(--body); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <div class="qr" id="qr" aria-label="QR-код для скачивания"></div>
+  <div class="info">
+    <h1>Запрет</h1>
+    <p>Наведите камеру телефона на QR-код или нажмите кнопку, чтобы скачать архив.</p>
+    <span class="file">zapret.zip · 1,6 МБ · Windows</span>
+    <a class="btn" id="dl" href="https://github.com/dokheiryu/zapret-download/releases/latest/download/zapret.zip">Скачать zip</a>
+    <div class="link"><code id="url"></code><button id="copy" type="button">Копировать</button></div>
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  var url = location.href.split('#')[0];
+  document.getElementById('url').textContent = url;
+  new QRCode(document.getElementById('qr'), { text: url, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
+  document.getElementById('copy').onclick = function () {
+    var b = this;
+    navigator.clipboard.writeText(url).then(function () { b.textContent = 'Скопировано'; }, function () {
+      var r = document.createRange(); r.selectNodeContents(document.getElementById('url'));
+      var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    });
+  };
+</script>
+</body>
+</html>
